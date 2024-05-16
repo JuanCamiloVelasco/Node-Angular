@@ -1,0 +1,40 @@
+<app-no-encontrado [visible]="!comida" mensajeNoEncontrado="Comida no encontrada" resetLinkText="Volver a la pagina principal"></app-no-encontrado>
+<div *ngIf="comida" class="container">
+    <img [src]="comida.urlImagen" [alt]="comida.nombre">
+
+    <div class="detalles">
+        <div class="header">
+            <span class="nombre">
+                {{comida.nombre}}
+            </span>
+            <span class="favorito {{comida.favorito? '': 'not'}}">❤</span>
+        </div>
+        <div class="rating">
+            <star-rating [estrellas]="comida.estrellas" [size]="1.8" />
+        </div>
+        <div class="origenes">
+            <span *ngFor="let origen of comida.origen">
+                {{origen}}
+            </span>
+        </div>
+        <div class="tags">
+            <a *ngFor="let tag of comida.tags" routerLink="/tag/{{tag}}">
+                {{tag}}
+            </a>
+        </div>
+
+        <div class="tiempo-cocina">
+            <span>
+                Tiempo estimado de preparacion <strong>{{comida.tiempoComida}}</strong> minutos
+            </span>
+        </div>
+
+        <div class="precio">
+            <span>
+                {{comida.precio | currency}}
+            </span>
+        </div>
+
+        <button (click)="agregarAlCarro()">Añadir al Carrito</button>
+    </div>
+</div>

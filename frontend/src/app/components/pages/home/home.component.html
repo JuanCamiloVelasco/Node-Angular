@@ -1,0 +1,35 @@
+<app-search></app-search>
+<app-tags></app-tags>
+<app-no-encontrado [visible]="!comidas || !comidas.length" resetLinkText="Reiniciar busqueda"></app-no-encontrado>
+<ul>
+    <li *ngFor="let comida of comidas">
+        <a routerLink="/comida/{{comida.id}}">
+            <img [src]="comida.urlImagen" [alt]="comida.nombre"/>
+            <div class="content">
+                <div class="name">
+                    {{comida.nombre}}
+                </div>
+                <span class="favorite {{comida.favorito?'':'not'}}">
+                    ❤
+                </span>
+                <div class="stars">
+                    <star-rating [estrellas]="comida.estrellas" />
+                </div>
+                <div class="producto-item-footer">
+                    <div class="origenes">
+                        <span *ngFor="let origen of comida.origen">
+                            {{origen}}
+                        </span>
+                    </div>
+                    <div class="tiempo-comida">
+                        <span>🕒</span>
+                        {{comida.tiempoComida}}
+                    </div>
+                </div>
+                <div class="precio">
+                    <span>{{comida.precio | currency }}</span>
+                </div>
+            </div>
+        </a>
+    </li>
+</ul>

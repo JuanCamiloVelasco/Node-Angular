@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="details">
+        <app-title title="Inicia Sesion"></app-title>
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+            <text-input [control]="fc.email" [showErrorsWhen]="isSubmitted" type="email" label="Email"></text-input>
+            <text-input [control]="fc.password" [showErrorsWhen]="isSubmitted" type="password" label="Password"></text-input>
+            <default-button text="Iniciar Sesion"></default-button>
+            <div class="register">
+                Eres Nuevo? &nbsp;
+                <a routerLink="/register" [queryParams]="{returnUrl: returnUrl}">
+                    Reistrate aqui
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
