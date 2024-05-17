@@ -10,6 +10,7 @@ var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var comida_router_1 = __importDefault(require("./routers/comida.router"));
 var user_router_1 = __importDefault(require("./routers/user.router"));
+var order_router_1 = __importDefault(require("./routers/order.router"));
 var database_config_1 = __importDefault(require("./configs/database.config"));
 (0, database_config_1.default)();
 var app = (0, express_1.default)();
@@ -20,6 +21,7 @@ app.use((0, cors_1.default)({
 }));
 app.use("/api/comidas", comida_router_1.default);
 app.use("/api/users", user_router_1.default);
+app.use("/api/orders", order_router_1.default);
 // Especifico las rutas al crear la carpeta public para el despliegue
 app.use(express_1.default.static(path_1.default.join('public', 'browser')));
 app.get('*', function (req, res) {

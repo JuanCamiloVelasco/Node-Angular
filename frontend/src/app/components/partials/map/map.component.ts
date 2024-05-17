@@ -1,19 +1,22 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { LatLng, LatLngExpression, LatLngTuple, LeafletMouseEvent, Map, Marker, icon, latLng, map, marker, tileLayer } from 'leaflet';
 import { LocationService } from '../../../services/location.service';
 import { Order } from '../../../shared/models/Order';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'map',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './map.component.html',
   styleUrl: './map.component.css'
 })
-export class MapComponent implements OnInit{
+export class MapComponent implements OnChanges{
 
   @Input()
   order!:Order
+  @Input()
+  readonly = false;
 
   private readonly MARKER_ZOOM_LEVEL = 16;
   private readonly MARKER_ICON = icon({
@@ -32,10 +35,30 @@ export class MapComponent implements OnInit{
 
   constructor(private locationService:LocationService) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    if(!this.order) return;
     this.initializeMap();
+
+    if(this.readonly && this.direccionLatLng){
+      this.showLocationOnReadonlyMode();
+    }
   }
 
+  showLocationOnReadonlyMode() {
+    const m = this.map;
+    this.setMarker(this.direccionLatLng);
+    m.setView(this.direccionLatLng, this.MARKER_ZOOM_LEVEL);
+
+    m.dragging.disable();
+    m.touchZoom.disable();
+    m.doubleClickZoom.disable();
+    m.scrollWheelZoom.disable();
+    m.boxZoom.disable();
+    m.keyboard.disable();
+    m.off('click');
+    m.tap?.disable();
+    this.currentMarker.dragging?.disable();
+  }
 
   initializeMap(){
     if(this.map) return;
@@ -61,7 +84,7 @@ export class MapComponent implements OnInit{
   }
 
   setMarker(latLng:LatLngExpression){
-    this.addressLatLng = latLng as LatLng;
+    this.direccionLatLng = latLng as LatLng;
     if(this.currentMarker){
       this.currentMarker.setLatLng(latLng);
       return;
@@ -73,14 +96,21 @@ export class MapComponent implements OnInit{
     }).addTo(this.map);
 
     this.currentMarker.on('dragend', () => {
-      this.addressLatLng = this.currentMarker.getLatLng();
+      this.direccionLatLng = this.currentMarker.getLatLng();
     })
   }
 
-  set addressLatLng(latLng:LatLng) {
+  set direccionLatLng(latLng:LatLng) {
+
+    if(!latLng.lat.toFixed) return;
+
     latLng.lat = parseFloat(latLng.lat.toFixed(8));
     latLng.lng = parseFloat(latLng.lng.toFixed(8));
     this.order.direccionLatLng = latLng;
     console.log(this.order.direccionLatLng);
+  }
+
+  get direccionLatLng(){
+    return this.order.direccionLatLng!;
   }
 }

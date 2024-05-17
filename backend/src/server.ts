@@ -6,7 +6,8 @@ import express from "express";
 import cors from "cors";
 import comidaRouter from "./routers/comida.router";
 import userRouter from "./routers/user.router";
-import dbConnect from './configs/database.config'
+import orderRouter from './routers/order.router';
+import dbConnect from './configs/database.config';
 dbConnect();
 
 const app = express();
@@ -16,8 +17,9 @@ app.use(cors({
     origin:["http://localhost:4200"]
 }));
 
-app.use("/api/comidas", comidaRouter)
-app.use("/api/users", userRouter)
+app.use("/api/comidas", comidaRouter);
+app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
 
 // Especifico las rutas al crear la carpeta public para el despliegue
 app.use(express.static(path.join('public', 'browser')));
